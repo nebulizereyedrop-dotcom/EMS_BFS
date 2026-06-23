@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import pool from '@/lib/db';
 import AuditReportClient from '@/components/audit/AuditReportClient';
 
@@ -36,11 +37,7 @@ async function getInitialAuditLogs() {
 }
 
 export default async function AuditLogPage() {
-  const initialLogs = await getInitialAuditLogs();
-
-  return (
-    <div className="p-6">
-      <AuditReportClient initialLogs={initialLogs} />
-    </div>
-  );
+  // Route disabled: redirecting to home. Remove this redirect to re-enable.
+  redirect('/');
+  // execution will never reach here due to redirect
 }
