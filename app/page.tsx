@@ -258,7 +258,7 @@ export default function Dashboard() {
 
     fetchAllRealtime();
     // Refresh setiap 10 detik (atau sesuaikan dengan kebutuhan, misal 60000 untuk 1 menit)
-    interval = setInterval(fetchAllRealtime, 300000);
+    interval = setInterval(fetchAllRealtime, 360000);
 
     return () => {
       clearInterval(interval);
