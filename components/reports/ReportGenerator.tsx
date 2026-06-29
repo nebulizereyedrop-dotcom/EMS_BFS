@@ -171,11 +171,11 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
           let isDp1 = false;
           let isDp2 = false;
 
-          if (rawUnit.endsWith('- DP 1')) {
-            baseUnit = rawUnit.replace(' - DP 1', '');
+          if (rawUnit.match(/(- DP 1| DP-1)$/i)) {
+            baseUnit = rawUnit.replace(/(- DP 1| DP-1)$/i, '').trim();
             isDp1 = true;
-          } else if (rawUnit.endsWith('- DP 2')) {
-            baseUnit = rawUnit.replace(' - DP 2', '');
+          } else if (rawUnit.match(/(- DP 2| DP-2)$/i)) {
+            baseUnit = rawUnit.replace(/(- DP 2| DP-2)$/i, '').trim();
             isDp2 = true;
           }
 
@@ -425,7 +425,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
 
         autoTable(pdf, {
           startY: finalY,
-          head: [['Timestamp', 'Unit ID', 'Temp (°C)', 'RH (%)', 'Differential Pressure (Pa)', 'Differential Pressure 2 (Pa)', 'Status', 'Comment/Reason']],
+          head: [['Timestamp', 'Unit ID', 'Temp (°C)', 'RH (%)', 'Differential Pressure 1 (Pa)', 'Differential Pressure 2 (Pa)', 'Status', 'Comment/Reason']],
           body: validRows,
           theme: 'striped',
           headStyles: { fillColor: [59, 130, 246] },
@@ -496,7 +496,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
 
         autoTable(pdf, {
           startY: finalY,
-          head: [['Timestamp', 'Unit ID', 'Temp (°C)', 'RH (%)', 'Differential Pressure 1 / Differential Pressure', 'Differential Pressure 2 (Pa)', 'Status', 'Comment/Reason']],
+          head: [['Timestamp', 'Unit ID', 'Temp (°C)', 'RH (%)', 'Differential Pressure 1 (Pa)', 'Differential Pressure 2 (Pa)', 'Status', 'Comment/Reason']],
           body: excludedRows,
           theme: 'striped',
           headStyles: { fillColor: [239, 68, 68] },
