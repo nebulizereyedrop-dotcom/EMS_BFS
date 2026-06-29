@@ -17,3 +17,9 @@ body {
   background: var(--background);
   transition: background-color 0.3s, color 0.3s;
 }
+
+
+@keyframes loading{
+  0% {width: 0%}
+  100% {width: 100%}
+}
