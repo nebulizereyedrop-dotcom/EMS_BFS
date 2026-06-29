@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
@@ -23,25 +23,65 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
   const [dataInterval, setDataInterval] = useState('raw');
   const [serverReadings, setServerReadings] = useState<any[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [roomList, setRoomList] = useState<string[]>([
+    'Dispensing 1',
+    'Dispensing 2',
+    'Mixing',
+    'Transfer Plastic Moulding',
+    'WIP',
+    'Filling',
+  ]);
 
-  const uniqueRooms = React.useMemo(() => {
-    const allRooms = [
-      ...readings.map(r => {
-        let room = (r.unit_id || '').trim();
-        if (room.endsWith('- DP 1')) return room.replace(' - DP 1', '');
-        if (room.endsWith('- DP 2')) return room.replace(' - DP 2', '');
-        return room;
-      }),
-      ...exclusions.map(e => {
-        let room = (e.unit_id || '').trim();
-        if (room.endsWith('- DP 1')) return room.replace(' - DP 1', '');
-        if (room.endsWith('- DP 2')) return room.replace(' - DP 2', '');
-        return room;
-      })
-    ];
-    const rooms = Array.from(new Set(allRooms));
-    return rooms.filter(Boolean).sort();
-  }, [readings, exclusions]);
+  useEffect(() => {
+    const fetchRooms = async () => {
+      try {
+        const res = await fetch('/api/rooms');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            const baseRooms = (data as string[])
+              .filter((room): room is string => typeof room === 'string' && room.trim().length > 0)
+              .map((room) => room.trim())
+              .filter((room) => !room.match(/(- DP \d+|DP-\d+| T-\d+| RH-\d+)$/i));
+
+            if (baseRooms.length > 0) {
+              setRoomList(baseRooms);
+              return;
+            }
+          }
+        }
+        setRoomList([
+          'Dispensing 1',
+          'Dispensing 2',
+          'Mixing',
+          'Transfer Plastic Moulding',
+          'WIP',
+          'Filling',
+        ]);
+      } catch (err) {
+        console.error('Gagal menarik daftar ruangan:', err);
+        setRoomList([
+          'Dispensing 1',
+          'Dispensing 2',
+          'Mixing',
+          'Transfer Plastic Moulding',
+          'WIP',
+          'Filling',
+        ]);
+      }
+    };
+
+    fetchRooms();
+
+    const handleRoomAdded = () => {
+      fetchRooms();
+    };
+
+    window.addEventListener('ems-room-added', handleRoomAdded);
+    return () => {
+      window.removeEventListener('ems-room-added', handleRoomAdded);
+    };
+  }, []);
 
   const parsedExclusions = useMemo(() => {
     return exclusions.map(exc => ({
@@ -640,8 +680,8 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
               className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
             >
               <option value="Pilih Ruangan">{t("Select Room 2")}</option>
-              {uniqueRooms.map(r => (
-                <option key={r as string} value={r as string}>{r as string}</option>
+              {roomList.map((room) => (
+                <option key={room} value={room}>{room}</option>
               ))}
             </select>
           </div>

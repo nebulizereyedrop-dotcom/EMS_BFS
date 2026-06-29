@@ -27,27 +27,22 @@ export async function POST(req: Request) {
     `;
     const values: any[] = [];
     let paramIndex = 1;
-
-    if (unit_id === 'Filling') {
-      query += ` WHERE unit_id IN ($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2})`;
-      values.push('Filling', 'Filling - DP 1', 'Filling - DP 2');
-      paramIndex += 3;
-    } else if (unit_id === 'Transfer Plastic Moulding') {
-      query += ` WHERE unit_id IN ($${paramIndex}, $${paramIndex + 1}, $${paramIndex + 2})`;
-      values.push('Transfer Plastic Moulding', 'Transfer Plastic Moulding - DP 1', 'Transfer Plastic Moulding - DP 2');
-      paramIndex += 3;
-    } else {
-      query += ` WHERE unit_id = $${paramIndex}`;
-      values.push(unit_id);
-      paramIndex += 1;
-    }
+    
+    // Match base room OR sub-rooms (e.g. "Filling", "Filling - DP 1", "Sampling DP-1")
+    query += ` WHERE (unit_id = $${paramIndex} 
+                     OR unit_id LIKE $${paramIndex} || ' - DP %' 
+                     OR unit_id LIKE $${paramIndex} || ' DP-%'
+                     OR unit_id LIKE $${paramIndex} || ' T-%'
+                     OR unit_id LIKE $${paramIndex} || ' RH-%')`;
+    values.push(unit_id);
+    paramIndex += 1;
 
     if (start_date) {
       query += ` AND "timestamp" >= EXTRACT(EPOCH FROM $${paramIndex}::timestamp AT TIME ZONE 'Asia/Jakarta')`;
       values.push(start_date);
       paramIndex++;
     }
-    
+
     if (end_date) {
       query += ` AND "timestamp" <= EXTRACT(EPOCH FROM $${paramIndex}::timestamp AT TIME ZONE 'Asia/Jakarta')`;
       values.push(end_date);
@@ -57,7 +52,7 @@ export async function POST(req: Request) {
     query += ` ORDER BY timestamp ASC`; // Urutkan dari yang paling lama ke terbaru untuk report
 
     const result = await pool.query(query, values);
-    
+
     // Add audit log
     await createAuditLog({
       action: 'EXPORT', // Or VIEW, but EXPORT fits generating a report better. Or VIEW because it's fetching data for report. Let's use VIEW. Actually EXPORT is for downloading. Let's use 'EXPORT' as making report is exporting data basically or 'VIEW'. The user said "buat report", let's use 'EXPORT'
