@@ -2,6 +2,29 @@
 
 Dokumen ini mencatat pembaruan dan perubahan terbaru yang dilakukan pada sistem manajemen *Email Alert*, khususnya pada fitur **Pengaturan Durasi Alarm**.
 
+## 4. Pembaruan Terbaru (29 Juni 2026): Penonaktifan Audit Log dan Penambahan Loading Screen
+
+### 4.1 Penonaktifan Halaman Audit Log
+- Halaman Audit Log kini tidak lagi ditampilkan sebagai menu navigasi aktif di [components/layout/Sidebar.tsx](components/layout/Sidebar.tsx).
+- Halaman [app/audit-log/page.tsx](app/audit-log/page.tsx) sekarang mengarahkan pengguna kembali ke halaman utama sehingga fitur ini tidak terbuka secara langsung.
+- Tujuannya adalah untuk menahan akses ke fitur audit log yang masih belum dioptimalkan untuk dipakai secara umum.
+
+### 4.2 Penyesuaian Alur Tutorial
+- Alur tutorial tidak lagi memaksa pengguna melanjutkan ke halaman Audit Log setelah menuntaskan tahapan sebelumnya.
+- Perubahan ini dibuat agar pengalaman tutorial tetap konsisten meskipun halaman Audit Log sedang dinonaktifkan.
+
+### 4.3 Penambahan Loading Screen Saat Aplikasi Dimuat
+- Aplikasi kini menampilkan layar loading penuh layar saat pertama kali dimuat melalui [components/layout/LoadingScreen.tsx](components/layout/LoadingScreen.tsx).
+- Layar ini menampilkan logo, progress bar, dan animasi transisi agar pengalaman buka aplikasi terasa lebih halus.
+- Integrasi layar loading sudah ditambahkan pada [app/layout.tsx](app/layout.tsx), sedangkan animasi pendukung terdapat di [app/globals.css](app/globals.css).
+
+### Dampak
+- Navigasi menjadi lebih bersih dan tidak memunculkan fitur yang belum siap.
+- Pengguna mendapatkan feedback visual saat aplikasi sedang memuat data.
+- Alur tutorial lebih aman dan tidak mengarahkan ke halaman yang dinonaktifkan.
+
+---
+
 ## 1. Pembaruan UI/UX Frontend (`app/emails/page.tsx`)
 Sebelumnya, durasi alarm akan secara otomatis tersimpan (*auto-save*) setiap kali pengguna mengubah angka di dalam *form* input. Kini, sistem telah diperbarui dengan alur penyimpanan manual:
 - **Penghapusan Auto-Save**: Fungsi `handleDurationChange` sekarang hanya bertugas untuk mengubah *state* durasi di *frontend* tanpa melakukan panggilan *fetch* ke API.
