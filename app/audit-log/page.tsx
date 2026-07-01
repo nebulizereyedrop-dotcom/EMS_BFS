@@ -35,7 +35,11 @@ async function getInitialAuditLogs() {
 }
 
 export default async function AuditLogPage() {
-   // Route disabled: redirecting to home. Remove this redirect to re-enable.
-  redirect('/');
-  // execution will never reach here due to redirect
+  const initialLogs = await getInitialAuditLogs();
+
+  return (
+    <div className="p-6">
+      <AuditReportClient initialLogs={initialLogs} />
+    </div>
+  );
 }

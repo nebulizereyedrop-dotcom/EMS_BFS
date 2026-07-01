@@ -4,22 +4,6 @@ Below is a **single source of truth** that documents every modification made to 
 
 ---
 
-## 0️⃣ Perubahan Terbaru (29 Juni 2026)
-
-### 1) Penonaktifan Audit Log
-- Item menu Audit Trail dihilangkan dari navigasi sidebar di [components/layout/Sidebar.tsx](components/layout/Sidebar.tsx).
-- Halaman [app/audit-log/page.tsx](app/audit-log/page.tsx) kini mengarahkan pengguna ke halaman utama agar fitur ini tidak dapat diakses langsung.
-
-### 2) Penyesuaian Alur Tutorial
-- Tutorial tidak lagi mengarahkan pengguna ke halaman Audit Log setelah selesai.
-- Perubahan ini menjaga alur onboarding tetap konsisten dengan status fitur yang saat ini dinonaktifkan.
-
-### 3) Penambahan Loading Screen
-- [components/layout/LoadingScreen.tsx](components/layout/LoadingScreen.tsx) menambahkan layar splash saat aplikasi pertama kali dimuat.
-- Komponen ini dipasang di [app/layout.tsx](app/layout.tsx) dan menggunakan animasi tambahan yang didefinisikan di [app/globals.css](app/globals.css).
-
----
-
 ## 1️⃣ `app/page.tsx` – Main Dashboard
 
 | # | Change | Description | Reason |

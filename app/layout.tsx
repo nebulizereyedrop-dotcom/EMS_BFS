@@ -26,8 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuditRouteListener />
         <Providers>
-
-          <LoadingScreen/>
+          <LoadingScreen />
           <AppLayout>{children}</AppLayout>
           <TutorialComponent />
           <Toaster theme="dark" position="bottom-right" />

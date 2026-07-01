@@ -141,10 +141,10 @@ export default function TutorialComponent() {
             content: 'Anda dapat menambah atau menghapus penerima, serta mengatur filter pengiriman pada tabel ini.',
           },
           {
-            target: '#tutorial-toggler',
-            content: 'Klik di sini untuk mengaktifkan / mengakhiri tutorial.',
+            target: '#AuditLogMenu',
+            content: 'Klik di sini untuk melanjutkan ke halaman Audit Trail.',
             placement: 'right',
-            locale: { last: 'Selesai' }
+            locale: { last: 'Lanjut ke Audit Trail' }
           }
         ];
       case '/audit-log':
@@ -161,6 +161,12 @@ export default function TutorialComponent() {
           {
             target: 'table',
             content: 'Seluruh riwayat aktivitas beserta detail user, alamat IP, dan waktu kejadian tersimpan pada tabel ini.',
+          },
+          {
+            target: '#tutorial-toggler',
+            content: 'Klik di sini untuk mengaktifkan / mengakhiri tutorial.',
+            placement: 'right',
+            locale: { last: 'Selesai' }
           }
         ];
       default:

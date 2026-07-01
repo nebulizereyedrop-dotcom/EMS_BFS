@@ -47,7 +47,7 @@ export function LoadingScreen() {
             </div>
 
             <div className="h-[2px] w-24 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full bg-[#007bff] rounded-full animate-[loading_1.8s_ease-in-out_forwards]"/>
+                <div className="h-full bg-[#007bff] rounded-full animate-[loading_1.8s_ease-in-out_forwards]" />
             </div>
 
         </div>

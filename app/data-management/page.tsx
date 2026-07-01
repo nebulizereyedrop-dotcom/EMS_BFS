@@ -47,7 +47,6 @@ export default function DataManagementPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.length > 0) {
-          // setRoomList(data);
           const baseRooms = data.filter((room: string) => !room.match(/(- DP \d+|DP-\d+| T-\d+| RH-\d+)$/i));
           setRoomList(baseRooms);
         }
