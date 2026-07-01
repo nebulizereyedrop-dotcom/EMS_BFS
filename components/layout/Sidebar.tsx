@@ -19,7 +19,7 @@ const navItems = [
   { key: 'DataManagementMenu', href: '/data-management', icon: Database },
   { key: 'ReportsMenu', href: '/reports', icon: FileText },
   { key: 'EmailAlertsMenu', href: '/emails', icon: Mail },
-  { key: 'AuditLogMenu', href: '/audit-log', icon: ShieldAlert },
+  // Commented out auditrail menu
 ];
 
 export default function Sidebar() {
