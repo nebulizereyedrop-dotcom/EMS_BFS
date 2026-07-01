@@ -141,34 +141,28 @@ export default function TutorialComponent() {
             content: 'Anda dapat menambah atau menghapus penerima, serta mengatur filter pengiriman pada tabel ini.',
           },
           {
-            target: '#AuditLogMenu',
-            content: 'Klik di sini untuk melanjutkan ke halaman Audit Trail.',
-            placement: 'right',
-            locale: { last: 'Lanjut ke Audit Trail' }
-          }
-        ];
-      case '/audit-log':
-        return [
-          {
-            target: 'h1',
-            content: 'Halaman Audit Trail menyimpan rekam jejak setiap interaksi dan aktivitas pengguna dalam sistem.',
-            disableBeacon: true,
-          },
-          {
-            target: '.grid-cols-1.md\\:grid-cols-3, .grid-cols-1.sm\\:grid-cols-2',
-            content: 'Anda dapat melakukan filter data berdasarkan periode waktu, jenis aksi, atau modul yang diakses.',
-          },
-          {
-            target: 'table',
-            content: 'Seluruh riwayat aktivitas beserta detail user, alamat IP, dan waktu kejadian tersimpan pada tabel ini.',
-          },
-          {
             target: '#tutorial-toggler',
             content: 'Klik di sini untuk mengaktifkan / mengakhiri tutorial.',
             placement: 'right',
             locale: { last: 'Selesai' }
           }
         ];
+      // case '/audit-log':
+      //   return [
+      //     {
+      //       target: 'h1',
+      //       content: 'Halaman Audit Trail menyimpan rekam jejak setiap interaksi dan aktivitas pengguna dalam sistem.',
+      //       disableBeacon: true,
+      //     },
+      //     {
+      //       target: '.grid-cols-1.md\\:grid-cols-3, .grid-cols-1.sm\\:grid-cols-2',
+      //       content: 'Anda dapat melakukan filter data berdasarkan periode waktu, jenis aksi, atau modul yang diakses.',
+      //     },
+      //     {
+      //       target: 'table',
+      //       content: 'Seluruh riwayat aktivitas beserta detail user, alamat IP, dan waktu kejadian tersimpan pada tabel ini.',
+      //     },
+      //   ];
       default:
         return [
           {
