@@ -18,10 +18,17 @@ export async function POST(req: Request) {
     for (const room of rooms) {
       const { external_log_id, room_name, target_column, unit_display_name, line, status } = room;
 
-      if (!external_log_id || !room_name || !target_column || !unit_display_name || !line || !status) {
+      if (external_log_id === undefined || !room_name || !target_column || !unit_display_name || !line || !status) {
         await client.query('ROLLBACK');
         return NextResponse.json({ error: 'Setiap ruangan memerlukan semua field' }, { status: 400 });
       }
+
+      // Kosongkan kepemilikan ID sensor lama tanpa menghapus datanya (menggunakan angka negatif unik)
+      await client.query(`
+        UPDATE public."BFS_EMS_Room" 
+        SET external_log_id = -(EXTRACT(EPOCH FROM now())::int + id), updated_at = now()
+        WHERE external_log_id = $1
+      `, [external_log_id]);
 
       const query = `
         INSERT INTO public."BFS_EMS_Room" 
