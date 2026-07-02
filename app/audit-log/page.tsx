@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import pool from '@/lib/db';
 import AuditReportClient from '@/components/audit/AuditReportClient';
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: 'Audit Logs | Central AC Dashboard',
@@ -35,11 +36,5 @@ async function getInitialAuditLogs() {
 }
 
 export default async function AuditLogPage() {
-  const initialLogs = await getInitialAuditLogs();
-
-  return (
-    <div className="p-6">
-      <AuditReportClient initialLogs={initialLogs} />
-    </div>
-  );
+  redirect('/');
 }
