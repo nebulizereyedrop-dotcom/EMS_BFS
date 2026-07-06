@@ -5,7 +5,7 @@ import { ShieldAlert, MessageSquare } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'sonner';
 
-const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || "http://10.165.40.13:1880";
+const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || "http://10.165.40.174:1880";
 
 export default function DataTable({ readings, exclusions, dataFilter = 'Semua Data' }: { readings: any[], exclusions: any[], dataFilter?: string }) {
   const { t } = useLanguage();

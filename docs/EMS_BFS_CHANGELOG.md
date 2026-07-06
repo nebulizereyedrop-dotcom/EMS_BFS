@@ -274,7 +274,7 @@ DB_USER=appuser
 DB_PASSWORD=appuser
 
 # Node-RED
-NEXT_PUBLIC_NODE_RED_URL=http://10.165.40.13:1880
+NEXT_PUBLIC_NODE_RED_URL=http://10.165.40.174:1880
 ```
 
 > **Konvensi Next.js:**
@@ -422,7 +422,7 @@ Sistem pewarnaan gradien grafik (SVG Linear Gradient) yang awalnya dihitung berd
 │  BFS_EMS_Fumigasi  → Data exclusion + copy nilai sensor      │
 └──────────────────────────────────────────────────────────────┘
 
-Node-RED (10.165.40.13:1880)
+Node-RED (10.165.40.174:1880)
 → Digunakan HANYA untuk: DELETE exclusion (Mustache SQL template)
 → TIDAK lagi digunakan untuk: INSERT (sudah pindah ke Next.js API)
 ```

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import CustomDateTimePicker from '@/components/ui/CustomDateTimePicker';
 
-const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || 'http://10.165.40.13:1880';
+const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || 'http://10.165.40.174:1880';
 const ROOMS = ['Dispensing 1', 'Dispensing 2', 'Mixing', 'Filling', 'Transfer Plastic Moulding', 'WIP'];
 
 export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAddExclusion: (data: any) => void, readings?: any[] }) {
