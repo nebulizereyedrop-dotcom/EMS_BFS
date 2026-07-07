@@ -379,6 +379,9 @@ filteredReadings[] ← allData difilter by selectedRoom
 **Cara kerja filter exclusion di chart:**
 Data dari sensor yang timestampnya jatuh di dalam rentang `timestamp_start` – `timestamp_end` di exclusion list akan ditandai sebagai `excluded` dan ditampilkan dengan warna berbeda di grafik.
 
+**Catatan terbaru:**
+- Grafik laporan kini menampilkan warna merah hanya untuk nilai yang benar-benar melewati batas waspada/tindakan. Nilai normal tetap menggunakan warna garis default agar indikator overlimit lebih jelas.
+
 ---
 
 ## 8. Cara Menjalankan Lokal

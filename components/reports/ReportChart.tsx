@@ -18,20 +18,22 @@ const chartCommonProps = {
   activeDot: { r: 3, strokeWidth: 0 },
 };
 
-const CustomDot = (props: any) => {
-  const { cx, cy, payload, dataKey } = props;
-  const value = payload[dataKey];
-  let isAlert = false;
-  if (dataKey === 'temperature') isAlert = value >= 24;
-  if (dataKey === 'relative_humidity') isAlert = value >= 59;
-  if (dataKey === 'differential_pressure' || dataKey === 'dp2') isAlert = value <= 8;
+const isValueAlert = (dataKey: string, value: number | null | undefined) => {
+  if (value === null || value === undefined || isNaN(Number(value))) return false;
+  const numeric = Number(value);
+  if (dataKey === 'temperature') return numeric >= 24;
+  if (dataKey === 'relative_humidity') return numeric >= 59;
+  if (dataKey === 'differential_pressure' || dataKey === 'dp2') return numeric <= 8;
+  return false;
+};
 
-  if (isAlert) {
-    return (
-      <circle cx={cx} cy={cy} r={4} fill="#ef4444" stroke="none" />
-    );
-  }
-  return null;
+const CustomDot = (props: any) => {
+  const { cx, cy, payload } = props;
+  if (!payload?.alert) return null;
+
+  return (
+    <circle cx={cx} cy={cy} r={4} fill="#ef4444" stroke="none" />
+  );
 };
 
 function MetricChart({
@@ -47,10 +49,22 @@ function MetricChart({
   data: any[];
   dataKey: 'temperature' | 'relative_humidity' | 'differential_pressure' | 'dp2';
 }) {
-  const values = data
-    .filter(d => d[dataKey] !== null && d[dataKey] !== undefined)
-    .map(d => Number(d[dataKey]))
-    .filter(v => !isNaN(v) && v !== 0);
+  const enrichedData = data.map((item) => {
+    const rawValue = item[dataKey];
+    const numeric = rawValue === null || rawValue === undefined ? null : Number(rawValue);
+    const alert = isValueAlert(dataKey, numeric);
+    return {
+      ...item,
+      alert,
+      value: numeric,
+      alertValue: alert ? numeric : null,
+    };
+  });
+
+  const values = enrichedData
+    .filter(d => d.value !== null && d.value !== undefined)
+    .map(d => Number(d.value))
+    .filter(v => !isNaN(v));
   const minVal = values.length ? Math.min(...values) : 0;
   const maxVal = values.length ? Math.max(...values) : 0;
 
@@ -112,7 +126,7 @@ function MetricChart({
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
       <p className="text-sm font-medium text-slate-800 mb-2">{title}</p>
-      <LineChart width={430} height={180} data={data}>
+      <LineChart width={430} height={180} data={enrichedData}>
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             {isGreater ? (
@@ -172,11 +186,23 @@ function MetricChart({
         />
         <Line
           {...chartCommonProps}
-          dataKey={dataKey}
+          dataKey="value"
           name={title}
-          stroke={`url(#${gradientId})`}
+          stroke={color}
+          connectNulls={false}
+          dot={false}
+        />
+        <Line
+          {...chartCommonProps}
+          dataKey="alertValue"
+          name={`${title} Alert`}
+          stroke="#ef4444"
           connectNulls={false}
           dot={<CustomDot dataKey={dataKey} />}
+          strokeWidth={2.5}
+          activeDot={false}
+          strokeOpacity={1}
+          isAnimationActive={false}
         />
       </LineChart>
     </div>

@@ -369,11 +369,9 @@ Mengubah algoritma *grouping key* untuk memadatkan data menggunakan presisi ting
 
 ### 4.4 — Perbaikan Visual Gradien Grafik Laporan
 **Masalah:**  
-Garis pada grafik (Line Chart) berubah menjadi merah terlalu awal meskipun nilai datanya belum menyentuh garis batas waspada/tindakan (threshold limit).
-**Solusi:**  
-Sistem pewarnaan gradien grafik (SVG Linear Gradient) yang awalnya dihitung berdasarkan skala batas absolut sumbu Y (`yMax` dan `yMin`) kini diperbaiki. Karena *library* grafik (Recharts) merender gradien berdasarkan dimensi objek (data aktual tertinggi dan terendah / `objectBoundingBox`), perhitungan warna gradien kini dihitung dinamis menggunakan selisih antara batas nilai *threshold* dengan `maxVal` dan `minVal` dari data riil.
-**File yang diubah:**
-- `components/reports/ReportChart.tsx`
+Garis pada grafik (Line Chart) berubah menjadi merah terlalu awal meskipun nilai datanya belum menyentuh batas waspada/tindakan (threshold limit).
+**Solusi:**
+Sistem pewarnaan gradien grafik (SVG Linear Gradient) kini diperbaiki agar warna merah hanya muncul ketika nilai benar-benar melewati batas waspada/tindakan. Perhitungan gradien disesuaikan dengan selisih langsung terhadap `threshold` dan rentang data aktual (`maxVal` / `minVal`) sehingga indikator overlimit lebih akurat.
 
 ---
 
