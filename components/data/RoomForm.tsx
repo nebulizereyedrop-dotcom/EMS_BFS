@@ -157,7 +157,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
         {t("Add New Room")}
       </h3>
       <form id="room-form" onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div id="room-name">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Room Name")}</label>
           <input
             type="text"
@@ -224,6 +224,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
 
         {/* Add Differential Pressure Button */}
         <button
+          id='add-new-parameter'
           type="button"
           onClick={addDifferentialPressure}
           className="w-full border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm"
@@ -233,7 +234,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
 
         {/* Line and Status */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
+          <div id='line'>
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Line")}</label>
             <select
               value={line}
@@ -246,7 +247,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
               ))}
             </select>
           </div>
-          <div>
+          <div id='status'>
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Status")}</label>
             <select
               value={status}
@@ -260,6 +261,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
         </div>
 
         <button
+          id='submit'
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-medium py-2.5 rounded-xl transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)] mt-2"

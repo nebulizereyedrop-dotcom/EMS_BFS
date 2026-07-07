@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 import CustomDateTimePicker from '@/components/ui/CustomDateTimePicker';
 
-const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || 'http://10.165.40.174:1880';
+const NODE_RED = process.env.NEXT_PUBLIC_NODE_RED_URL || 'http://10.165.40.13:1880';
 const ROOMS = ['Dispensing 1', 'Dispensing 2', 'Mixing', 'Filling', 'Transfer Plastic Moulding', 'WIP'];
 
 export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAddExclusion: (data: any) => void, readings?: any[] }) {
@@ -130,7 +130,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
         {t("Add Exclusion")}
       </h3>
       <form id="exclusion-form" onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div id="room-list">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Room")}</label>
           <select
             value={unitId}
@@ -142,7 +142,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
             ))}
           </select>
         </div>
-        <div>
+        <div id="keterangan-list">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Tipe Anomali</label>
           <select
             value={exclusionType}
@@ -153,7 +153,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
             <option value="PM">PM / Preventive Maintenance</option>
           </select>
         </div>
-        <div className="space-y-4">
+        <div id="datepicker" className="space-y-4">
           <div className="text-sm font-medium text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1">{t("Start Period")}</div>
           <CustomDateTimePicker
             value={startDateTime}
@@ -171,7 +171,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
           />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div>
+          <div id="alasan">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Reason")}</label>
             <textarea
               rows={3}
@@ -181,7 +181,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
               placeholder={t("Reason Placeholder")}
             />
           </div>
-          <div>
+          <div id="status">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Target Data (Status)</label>
             <select
               value={statusTag}
@@ -194,6 +194,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
           </div>
         </div>
         <button
+          id="exclude-submit"
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-rose-500 hover:bg-rose-600 disabled:opacity-50 text-white font-medium py-2.5 rounded-xl transition-colors shadow-[0_0_15px_rgba(244,63,94,0.3)]"

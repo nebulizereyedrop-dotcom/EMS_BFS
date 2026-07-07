@@ -660,7 +660,6 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
 
   return (
     <div className="space-y-6">
-
       {/* FILTER CONTROLS */}
       <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl">
         <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2 mb-6">
@@ -668,8 +667,8 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
           {t("Filter Config")}
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          <div>
+        <div id="filter-controls" className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          <div id="room-select">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">{t("Room")}</label>
             <select
               value={selectedRoom}
@@ -682,20 +681,24 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
               ))}
             </select>
           </div>
-          <CustomDateTimePicker
-            value={startDate}
-            onChange={setStartDate}
-            label={t("Start Date")}
-            placeholder="Select start date & time"
-          />
-          <CustomDateTimePicker
-            value={endDate}
-            onChange={setEndDate}
-            label={t("End Date")}
-            placeholder="Select end date & time"
-          />
+          <div id='start-date-picker'>
+            <CustomDateTimePicker
+              value={startDate}
+              onChange={setStartDate}
+              label={t("Start Date")}
+              placeholder="Select start date & time"
+            />
+          </div>
+          <div id='end-date-picker'>
+            <CustomDateTimePicker
+              value={endDate}
+              onChange={setEndDate}
+              label={t("End Date")}
+              placeholder="Select end date & time"
+            />
+          </div>
           {/* Tambahan Kolom Interval */}
-          <div>
+          <div id="data-interval-select">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">{t("Data Interval")}</label>
             <select
               value={dataInterval}
@@ -707,7 +710,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
               <option value="1h">{t("Per 1 Hour")}</option>
             </select>
           </div>
-          <div>
+          <div id="report-type-select">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">{t("Report Type")}</label>
             <select
               value={reportType}
@@ -722,7 +725,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
         </div>
 
         {/* Exclude Parameter UI */}
-        <div className="mt-4">
+        <div className="mt-4" id="exclude-parameter">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">{t("Exclude Parameter")}</label>
           <div className="flex flex-wrap gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
@@ -745,6 +748,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
           <button
             onClick={fetchReportData}
             disabled={isLoadingData}
+            id="fetch-data-button"
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-5 py-2.5 rounded-xl font-medium transition-all text-sm whitespace-nowrap"
           >
             {isLoadingData ? (
@@ -773,6 +777,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
         <button
           onClick={handleGeneratePDF}
           disabled={isGenerating || dateFilteredReadings.length === 0}
+          id="generate-pdf-button"
           className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] whitespace-nowrap"
         >
           {isGenerating ? (
@@ -787,21 +792,21 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-md">
+        <div id="filtered-records" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-md">
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("Filtered Records")}</p>
           <p className="text-4xl font-bold text-slate-800 dark:text-slate-100 mt-2">{dateFilteredReadings.length}</p>
         </div>
-        <div className={`p-6 rounded-2xl shadow-md border ${reportType === 'Fumigasi' ? 'bg-white dark:bg-slate-900/50 border-emerald-900/20 opacity-50' : 'bg-white dark:bg-slate-900 border-emerald-900/50'}`}>
+        <div id="valid-data" className={`p-6 rounded-2xl shadow-md border ${reportType === 'Fumigasi' ? 'bg-white dark:bg-slate-900/50 border-emerald-900/20 opacity-50' : 'bg-white dark:bg-slate-900 border-emerald-900/50'}`}>
           <p className="text-sm font-medium text-emerald-500 uppercase tracking-wider">{t("Valid Data")}</p>
           <p className="text-4xl font-bold text-emerald-400 mt-2">{validReadings.length}</p>
         </div>
-        <div className={`p-6 rounded-2xl shadow-md border ${reportType === 'Non-Fumigasi' ? 'bg-white dark:bg-slate-900/50 border-rose-900/20 opacity-50' : 'bg-white dark:bg-slate-900 border-rose-900/50'}`}>
+        <div id="excluded-fumigasi" className={`p-6 rounded-2xl shadow-md border ${reportType === 'Non-Fumigasi' ? 'bg-white dark:bg-slate-900/50 border-rose-900/20 opacity-50' : 'bg-white dark:bg-slate-900 border-rose-900/50'}`}>
           <p className="text-sm font-medium text-rose-500 uppercase tracking-wider">{t("Excluded Fumigasi")}</p>
           <p className="text-4xl font-bold text-rose-400 mt-2">{excludedReadings.length}</p>
         </div>
       </div>
 
-      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl">
+      <div id="visual-preview" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl">
         <h3 className="text-lg font-medium text-slate-700 dark:text-slate-200 mb-6 flex items-center gap-2">
           {t("Visual Preview")}
           <span className="text-xs font-normal text-slate-500 bg-slate-50 dark:bg-slate-950 px-2 py-1 rounded-md">{t("Included in PDF")}</span>

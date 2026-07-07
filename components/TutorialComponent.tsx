@@ -76,51 +76,190 @@ export default function TutorialComponent() {
             locale: { last: 'Lanjut ke Manajemen Data' }
           }
         ];
-      case '/data-management':
+         case '/data-management':
         return [
           {
-            target: 'h1',
-            content: 'Halaman Manajemen Data. Gunakan halaman ini untuk mencatat pengecualian data, misalnya saat Kalibrasi atau Fumigasi.',
-            disableBeacon: true,
+            target: '#room-list-filter',
+            content: 'Gunakan filter ruangan untuk menentukan ruangan yang ingin diambil datanya',
+            placement: 'right',
           },
           {
-            target: '#room-form',
-            content: 'Isi form ini untuk menentukan ruangan yang ingin ditambahkan.',
+            target: '#start-date',
+            content: 'Gunakan filter tanggal awal untuk menentukan data yang ingin diambil datanya',
+            placement: 'right',
           },
+          {
+            target: '#end-date',
+            content: 'Gunakan filter tanggal akhir untuk menentukan data yang ingin diambil datanya',
+            placement: 'right',
+          },
+          {
+            target: '#interval-filter',
+            content: 'Gunakan interval data ini untuk menentukan interval waktu dari data yang ingin diambil',
+            placement: 'right',
+          },
+          {
+            target: '#fetch-data-button',
+            content: 'Setelah semua filter terisi, klik tombol ini untuk mengambil data',
+            placement: 'right',
+          },
+
+          {
+            target: "room-form",
+            content: 'Ini adalah form untuk menambahkan ruangan baru',
+            placement: 'right',
+          },
+          {
+            target: "room-name",
+            content: 'Isi nama ruangan yang ingin ditambahkan',
+            placement: 'right',
+          },
+          {
+            target: "temp",
+            content: 'Isi data sensor untuk Temperature',
+            placement: 'right',
+          },
+          {
+            target: "rh",
+            content: 'Isi data sensor untuk Relative Humidity',
+            placement: 'right',
+          },
+          {
+            target: "dp1",
+            content: 'Isi data sensor untuk Differential Pressure',
+            placement: 'right',
+          },
+          {
+            target: "add-new-parameter",
+            content: 'Klik tombol ini untuk menambahkan parameter baru',
+            placement: 'right',
+          },
+          {
+            target: "line",
+            content: 'Gunakan filter line untuk menentukan line yang ingin ditambahkan',
+            placement: 'right',
+          },
+          {
+            target: "status",
+            content: 'Pilih status tag (Aktif / non-Aktif) untuk ruangan yang ingin ditambahkan',
+            placement: 'right',
+          },
+          {
+            target: "submit",
+            content: 'Klik tombol ini untuk mulai menambahkan data ruangan',
+            placement: 'right',
+          },
+
+
           {
             target: '#exclusion-form',
-            content: 'Isi form ini untuk menentukan ruangan dan rentang waktu yang ingin dikecualikan dari sistem peringatan.',
+            content: 'Dan disini adalah form untuk mengecualikan data Fumigasi maupun PM',
+            placement: 'right',
           },
           {
-            target: '#exclusion-list',
-            content: 'Daftar pengecualian yang sedang aktif akan muncul di area ini.',
+            target: '#room-list',
+            content: 'Gunakan filter ruangan untuk menentukan ruangan yang ingin dikecualikan',
+            placement: 'right',
           },
           {
-            target: '#table-data',
-            content: 'Tabel ini menampilkan seluruh data sensor dari setiap ruangan. Anda dapat memfilter data berdasarkan tanggal, waktu, dan ruangan.',
-            placement: 'top',
+            target: "#keterangan-list",
+            content: 'Pilih tipe pengecualian',
+            placement: 'right',
           },
+          {
+            target: "#datepicker",
+            content: 'Pilih tanggal dan waktu pengecualian',
+            placement: 'right',
+          },
+          {
+            target: "#alasan",
+            content: 'Isi alasan pengecualian',
+            placement: 'right',
+          },
+          {
+            target: "#status",
+            content: 'Pilih status tag pengecualian',
+            placement: 'right',
+          },
+          {
+            target: '#exclude-submit',
+            content: 'Klik tombol ini untuk mulai memindahkan data ke tabel pengecualian',
+            placement: 'right',
+          },
+
           {
             target: '#ReportsMenu',
             content: 'Klik di sini untuk melanjutkan ke halaman Laporan.',
             placement: 'right',
             locale: { last: 'Lanjut ke Laporan' }
-          }
+          },
         ];
       case '/reports':
         return [
           {
-            target: 'h1',
-            content: 'Halaman Laporan Sistem memungkinkan Anda menarik data riwayat dan mengunduhnya sebagai file PDF.',
+            target: '#filter-controls',
+            content: 'Halaman Laporan. Gunakan filter ini untuk menentukan jenis laporan, periode waktu, dan parameter yang ingin ditampilkan.',
             disableBeacon: true,
           },
           {
-            target: '.grid-cols-1.md\\:grid-cols-4',
-            content: 'Tentukan rentang waktu, ruangan, dan jenis laporan yang ingin ditarik menggunakan form filter ini.',
+            target: '#room-select',
+            content: 'Pilih ruangan yang ingin ditampilkan pada laporan.',
+            disableBeacon: true,
           },
           {
-            target: '.recharts-wrapper, .h-\\[400px\\]',
-            content: 'Pratinjau visual berupa grafik data sensor akan muncul di area ini sebelum Anda mencetak/unduh PDF.',
+            target: '#start-date-picker',
+            content: 'Pilih tanggal & waktu mulai untuk laporan.',
+            disableBeacon: true
+          },
+          {
+            target: '#end-date-picker',
+            content: 'Pilih tanggal & waktu akhir untuk laporan.',  
+            disableBeacon: true
+          },
+          {
+            target: '#data-interval-select',
+            content: 'Pilih interval data yang ingin ditampilkan pada laporan (1 Jam, 5 Menit, Mentah (All data)).',
+            disableBeacon: true,
+          },
+          {
+            target: '#report-type-select',
+            content: 'Pilih jenis laporan yang ingin dibuat (Fumigasi / Non-Fumigasi / All Data).',
+            disableBeacon: true,
+          },
+          {
+            target: '#exclude-parameter',
+            content: 'Centang parameter yang ingin dikecualikan dari laporan. (Temp / RH / Pressure).',
+            disableBeacon: true,
+          },
+          {
+            target: '#fetch-data-button',
+            content: 'Klik tombol ini untuk mengambil dan menampilkan data laporan berdasarkan filter yang telah dipilih.',
+            disableBeacon: true,
+          },
+          {
+            target: '#generate-pdf-button',
+            content: 'Klik tombol ini untuk mengunduh laporan dalam format PDF.',
+            disableBeacon: true,
+          },
+          {
+            target: '#filtered-records',
+            content: 'Menampilkan jumlah data yang telah difilter berdasarkan periode waktu dan ruangan yang dipilih.',
+            disableBeacon: true,
+          },
+          {
+            target: '#valid-data',
+            content: 'Menampilkan jumlah data yang valid dan termasuk dalam laporan.',
+            disableBeacon: true,
+          },
+          {
+            target: '#excluded-fumigasi',
+            content: 'Menampilkan jumlah data yang dikecualikan dari laporan.',
+            disableBeacon: true,
+          },
+          {
+            target: '#visual-preview',
+            content: 'Menampilkan pratinjau visual dari laporan yang akan diunduh dalam format PDF.',
+            disableBeacon: true,
           },
           {
             target: '#EmailAlertsMenu',

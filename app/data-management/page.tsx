@@ -241,7 +241,7 @@ export default function DataManagementPage() {
           <Search className="w-4 h-4 text-blue-400" /> {t("Filter Configuration")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-end">
-          <div>
+          <div id="room-list-filter">
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">{t("Room")}</label>
             <select
               value={selectedRoom}
@@ -252,19 +252,23 @@ export default function DataManagementPage() {
               {roomList.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
-          <CustomDateTimePicker
-            value={startDate}
-            onChange={(value) => { setStartDate(value); setHasFetched(false); }}
-            label={t("Start Date")}
-            placeholder="Select start date & time"
-          />
-          <CustomDateTimePicker
-            value={endDate}
-            onChange={(value) => { setEndDate(value); setHasFetched(false); }}
-            label={t("End Date")}
-            placeholder="Select end date & time"
-          />
-          <div>
+          <div id="start-date">
+            <CustomDateTimePicker
+              value={startDate}
+              onChange={(value) => { setStartDate(value); setHasFetched(false); }}
+              label={t("Start Date")}
+              placeholder="Select start date & time"
+            />
+          </div>
+          <div id="end-date">
+            <CustomDateTimePicker
+              value={endDate}
+              onChange={(value) => { setEndDate(value); setHasFetched(false); }}
+              label={t("End Date")}
+              placeholder="Select end date & time"
+            />
+          </div>
+          <div id="interval-filter">
             <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">{t("Data Interval")}</label>
             <select
               value={dataInterval}
@@ -277,7 +281,7 @@ export default function DataManagementPage() {
             </select>
           </div>
 
-          <div>
+          <div id="fetch-data-button">
             <button
               onClick={handleFetchData}
               disabled={isLoading}
