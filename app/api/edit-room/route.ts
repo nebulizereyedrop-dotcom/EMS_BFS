@@ -5,7 +5,7 @@ export async function POST(req: Request) {
   const client = await pool.connect();
   try {
     const body = await req.json();
-    const { attributes } = body; // Array of { id: number, external_log_id: number }
+    const { attributes } = body; // Array of { id: number, external_log_id: number, status: string, room_name: string, Line: string }
 
     if (!attributes || !Array.isArray(attributes) || attributes.length === 0) {
       return NextResponse.json({ error: 'Data tidak lengkap' }, { status: 400 });
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const updatedRooms = [];
 
     for (const attr of attributes) {
-      const { id, external_log_id } = attr;
+      const { id, external_log_id, status, room_name, Line } = attr;
 
       if (id === undefined || external_log_id === undefined) {
         await client.query('ROLLBACK');
@@ -32,12 +32,16 @@ export async function POST(req: Request) {
 
       const query = `
         UPDATE public."BFS_EMS_Room" 
-        SET external_log_id = $1, updated_at = now()
+        SET external_log_id = $1, 
+            status = COALESCE($3, status),
+            room_name = COALESCE($4, room_name),
+            "Line" = COALESCE($5, "Line"),
+            updated_at = now()
         WHERE id = $2
         RETURNING *
       `;
       
-      const result = await client.query(query, [external_log_id, id]);
+      const result = await client.query(query, [external_log_id, id, status, room_name, Line]);
       if (result.rows.length > 0) {
         updatedRooms.push(result.rows[0]);
       }

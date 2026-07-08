@@ -373,6 +373,17 @@ Garis pada grafik (Line Chart) berubah menjadi merah terlalu awal meskipun nilai
 **Solusi:**
 Sistem pewarnaan gradien grafik (SVG Linear Gradient) kini diperbaiki agar warna merah hanya muncul ketika nilai benar-benar melewati batas waspada/tindakan. Perhitungan gradien disesuaikan dengan selisih langsung terhadap `threshold` dan rentang data aktual (`maxVal` / `minVal`) sehingga indikator overlimit lebih akurat.
 
+### 5.4 — Peningkatan Responsivitas UI
+**Masalah:**  
+Beberapa form pengaturan dan modal tampilan (*Edit Sensor*, *Room Form*, *Exclusion Form*, dan *Report Filter*) masih menggunakan *layout* kaku (kolom tunggal atau membelah statis) yang membuatnya tampak kurang rapi atau *squished* pada layar lebar (Tablet/PC).
+**Solusi:**  
+Menerapkan kombinasi CSS Grid responsif (`sm:`, `md:`, `lg:`) pada semua form tersebut sehingga lebar kontainer bertambah secara dinamis, dan baris-baris *input* berjajar secara horizontal pada layar besar, namun tetap *stack* vertikal pada layar *mobile*.
+**File yang diubah:**
+- `app/page.tsx`
+- `components/data/RoomForm.tsx`
+- `components/data/ExclusionForm.tsx`
+- `components/reports/ReportGenerator.tsx`
+
 ---
 
 ## Ringkasan File yang Dimodifikasi

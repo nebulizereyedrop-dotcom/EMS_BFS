@@ -169,7 +169,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
         </div>
 
         {/* Attributes */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
           {attributes.map((attr, index) => (
             <div key={attr.id} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-between mb-3">
@@ -184,7 +184,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
                   </button>
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">ID</label>
                   <input
@@ -233,7 +233,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
         </button>
 
         {/* Line and Status */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div id='line'>
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Line")}</label>
             <select

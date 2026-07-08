@@ -11,13 +11,14 @@ const ROOMS = ['Dispensing 1', 'Dispensing 2', 'Mixing', 'Filling', 'Transfer Pl
 export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAddExclusion: (data: any) => void, readings?: any[] }) {
   const { t } = useLanguage();
   const [roomList, setRoomList] = useState<string[]>(ROOMS);
-  const [unitId, setUnitId] = useState(roomList[0]);
+  const [unitIds, setUnitIds] = useState<string[]>([roomList[0]]);
   const [startDateTime, setStartDateTime] = useState('');
   const [endDateTime, setEndDateTime] = useState('');
   const [exclusionType, setExclusionType] = useState('Fumigasi');
   const [reason, setReason] = useState('');
   const [statusTag, setStatusTag] = useState('Semua');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fumigationLimit, setFumigationLimit] = useState(3);
 
   // Fetch all rooms from API
   const fetchRooms = async () => {
@@ -33,17 +34,17 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
 
           if (baseRooms.length > 0) {
             setRoomList(baseRooms);
-            setUnitId((prev) => (baseRooms.includes(prev) ? prev : baseRooms[0]));
+            setUnitIds((prev) => (prev.length > 0 ? prev : [baseRooms[0]]));
             return;
           }
         }
       }
       setRoomList(ROOMS);
-      setUnitId((prev) => (ROOMS.includes(prev) ? prev : ROOMS[0]));
+      setUnitIds((prev) => (prev.length > 0 ? prev : [ROOMS[0]]));
     } catch (err) {
       console.error("Gagal menarik daftar ruangan:", err);
       setRoomList(ROOMS);
-      setUnitId((prev) => (ROOMS.includes(prev) ? prev : ROOMS[0]));
+      setUnitIds((prev) => (prev.length > 0 ? prev : [ROOMS[0]]));
     }
   };
 
@@ -79,35 +80,57 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
 
     if (exclusionType === 'Fumigasi') {
       const diffHours = diffMs / (1000 * 60 * 60);
-      if (diffHours > 3) {
-        toast.error('Untuk Fumigasi, pengecualian data maksimal hanya 3 jam!');
+      if (diffHours > fumigationLimit) {
+        toast.error(`Untuk Fumigasi, pengecualian data maksimal hanya ${fumigationLimit} jam!`);
         return;
       }
     }
 
-    const payload = {
-      unit_id: unitId,
-      timestamp_start: `${startDate} ${startTime}:00`,
-      timestamp_end: `${endDate} ${endTime}:00`,
-      reason: `[${exclusionType}] [TAG:${statusTag}] ${reason}`,
-      excluded_by: 'admin@base44.io',
-    };
+    if (unitIds.length === 0) {
+      toast.error('Silakan pilih minimal 1 ruangan');
+      return;
+    }
 
     try {
       setIsSubmitting(true);
+      let totalRows = 0;
+      let hasError = false;
 
-      // Bypass Node-RED: Kita langsung panggil API Next.js kita sendiri karena INSERT diizinkan
-      const res = await fetch(`/api/add-exclusion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      // Iterate through selected rooms and insert exclusions
+      for (const uid of unitIds) {
+        const payload = {
+          unit_id: uid,
+          timestamp_start: `${startDate} ${startTime}:00`,
+          timestamp_end: `${endDate} ${endTime}:00`,
+          reason: `[${exclusionType}] [TAG:${statusTag}] ${reason}`,
+          excluded_by: 'admin@base44.io',
+        };
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Gagal memindahkan data');
+        const res = await fetch(`/api/add-exclusion`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-      toast.success(data.message || 'Data berhasil dipindahkan ke tabel Fumigasi');
-      onAddExclusion(payload);
+        const data = await res.json();
+        if (!res.ok) {
+          if (data.error && data.error.includes('Tidak ada data sensor ditemukan')) {
+            toast.warning(`Ruangan ${uid}: Tidak ada data sensor pada rentang waktu ini`);
+          } else {
+            toast.error(`Ruangan ${uid}: ${data.error || 'Gagal memindahkan data'}`);
+            hasError = true;
+          }
+        } else {
+          totalRows += data.data?.length || 0;
+          onAddExclusion(payload);
+        }
+      }
+
+      if (totalRows > 0) {
+        toast.success(`Data berhasil dipindahkan ke tabel Fumigasi untuk ruangan terpilih (${totalRows} baris)`);
+      } else if (!hasError) {
+        toast.info('Proses selesai, namun tidak ada data yang memenuhi kriteria pada rentang waktu ini.');
+      }
 
       setStartDateTime('');
       setEndDateTime('');
@@ -132,15 +155,25 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
       <form id="exclusion-form" onSubmit={handleSubmit} className="space-y-4">
         <div id="room-list">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Room")}</label>
-          <select
-            value={unitId}
-            onChange={(e) => setUnitId(e.target.value)}
-            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
             {roomList.map(r => (
-              <option key={r} value={r}>{r}</option>
+              <label key={r} className="flex items-center space-x-2 text-sm text-slate-700 dark:text-slate-200 cursor-pointer p-1 hover:bg-slate-100 dark:hover:bg-slate-900 rounded select-none">
+                <input
+                  type="checkbox"
+                  checked={unitIds.includes(r)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setUnitIds([...unitIds, r]);
+                    } else {
+                      setUnitIds(unitIds.filter(id => id !== r));
+                    }
+                  }}
+                  className="w-4 h-4 rounded border-slate-300 text-blue-500 focus:ring-blue-500 bg-white"
+                />
+                <span>{r}</span>
+              </label>
             ))}
-          </select>
+          </div>
         </div>
         <div id="keterangan-list">
           <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Tipe Anomali</label>
@@ -149,10 +182,23 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
             onChange={(e) => setExclusionType(e.target.value)}
             className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           >
-            <option value="Fumigasi">Fumigasi (Maks 3 Jam)</option>
+            <option value="Fumigasi">Fumigasi</option>
             <option value="PM">PM / Preventive Maintenance</option>
           </select>
         </div>
+        {exclusionType === 'Fumigasi' && (
+          <div id="fumigation-limit">
+            <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Batas Maksimal Fumigasi (Jam)</label>
+            <input
+              type="number"
+              min="1"
+              step="1"
+              value={fumigationLimit}
+              onChange={(e) => setFumigationLimit(parseInt(e.target.value) || 1)}
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+            />
+          </div>
+        )}
         <div id="datepicker" className="space-y-4">
           <div className="text-sm font-medium text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 pb-1">{t("Start Period")}</div>
           <CustomDateTimePicker
@@ -170,7 +216,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
             placeholder="Select end date & time"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div id="alasan">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Reason")}</label>
             <textarea
@@ -181,7 +227,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
               placeholder={t("Reason Placeholder")}
             />
           </div>
-          <div id="status">
+          <div id="status-exclusion">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Target Data (Status)</label>
             <select
               value={statusTag}

@@ -49,6 +49,9 @@ export default function Dashboard() {
       const payload = editingAttributes.map((attr) => ({
         id: attr.id,
         external_log_id: Number(attr.external_log_id),
+        status: attr.status,
+        room_name: attr.room_name,
+        Line: attr.Line,
       }));
 
       const res = await fetch("/api/edit-room", {
@@ -585,39 +588,85 @@ export default function Dashboard() {
 
       {editingRoom && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-md p-6 border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
-            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">Edit Sensor ID - {editingRoom}</h3>
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-[95vw] md:max-w-3xl lg:max-w-5xl p-6 border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 shrink-0">Edit Sensor ID - {editingRoom}</h3>
             {editingAttributes.length === 0 ? (
               <div className="flex justify-center p-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
               </div>
             ) : (
-              <div className="space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
-                {editingAttributes.map((attr, idx) => (
-                  <div key={attr.id} className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-slate-600 dark:text-slate-400 capitalize flex justify-between">
-                      <span>{attr.target_column.replace('_', ' ')}</span>
-                      {attr.room_name !== attr.unit_display_name && (
-                        <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full text-slate-500">
-                          {attr.room_name}
-                        </span>
-                      )}
-                    </label>
-                    <input
-                      type="number"
-                      value={attr.external_log_id ?? ''}
-                      onChange={(e) => {
-                        const newVal = [...editingAttributes];
-                        newVal[idx].external_log_id = e.target.value;
-                        setEditingAttributes(newVal);
-                      }}
-                      className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                    />
+              <div className="overflow-y-auto custom-scrollbar pr-2 flex-1 pb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {editingAttributes.map((attr, idx) => (
+                    <div key={attr.id} className="flex flex-col gap-3 p-4 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl">
+                    <h4 className="font-bold text-slate-800 dark:text-slate-100 flex items-center justify-between">
+                      {attr.target_column.replace('_', ' ')}
+                      <span className="text-[10px] bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded-full text-slate-500 font-normal">
+                        {attr.unit_display_name}
+                      </span>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-slate-500 dark:text-slate-400">ID Sensor</label>
+                        <input
+                          type="number"
+                          value={attr.external_log_id ?? ''}
+                          onChange={(e) => {
+                            const newVal = [...editingAttributes];
+                            newVal[idx].external_log_id = e.target.value;
+                            setEditingAttributes(newVal);
+                          }}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Status</label>
+                        <select
+                          value={attr.status || 'Active'}
+                          onChange={(e) => {
+                            const newVal = [...editingAttributes];
+                            newVal[idx].status = e.target.value;
+                            setEditingAttributes(newVal);
+                          }}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        >
+                          <option value="Active">Aktif</option>
+                          <option value="Inactive">Non-aktif</option>
+                        </select>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Nama Ruangan</label>
+                        <input
+                          type="text"
+                          value={attr.room_name ?? ''}
+                          onChange={(e) => {
+                            const newVal = [...editingAttributes];
+                            newVal[idx].room_name = e.target.value;
+                            setEditingAttributes(newVal);
+                          }}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="text-xs font-medium text-slate-500 dark:text-slate-400">Line</label>
+                        <input
+                          type="text"
+                          value={attr.Line ?? ''}
+                          onChange={(e) => {
+                            const newVal = [...editingAttributes];
+                            newVal[idx].Line = e.target.value;
+                            setEditingAttributes(newVal);
+                          }}
+                          className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        />
+                      </div>
+                    </div>
                   </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
-            <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-slate-100 dark:border-slate-800/50">
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/50 shrink-0">
               <button
                 onClick={() => setEditingRoom(null)}
                 className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"

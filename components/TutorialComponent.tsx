@@ -177,7 +177,7 @@ export default function TutorialComponent() {
             placement: 'right',
           },
           {
-            target: "#status",
+            target: "#status-exclusion",
             content: 'Pilih status tag pengecualian',
             placement: 'right',
           },

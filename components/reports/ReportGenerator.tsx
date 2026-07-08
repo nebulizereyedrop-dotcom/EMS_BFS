@@ -667,7 +667,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
           {t("Filter Config")}
         </h3>
 
-        <div id="filter-controls" className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div id="filter-controls" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <div id="room-select">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">{t("Room")}</label>
             <select
@@ -791,7 +791,7 @@ export default function ReportGenerator({ readings, exclusions }: { readings: an
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div id="filtered-records" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-md">
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t("Filtered Records")}</p>
           <p className="text-4xl font-bold text-slate-800 dark:text-slate-100 mt-2">{dateFilteredReadings.length}</p>
