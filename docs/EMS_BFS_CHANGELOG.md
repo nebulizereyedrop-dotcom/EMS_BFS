@@ -10,9 +10,11 @@
 2. [Sesi 2 — Perbaikan Report, Performance & Security](#sesi-2)
 3. [Sesi 3 — Dashboard Real-Time & Notifikasi Email](#sesi-3)
 4. [Sesi 4 — Fitur Laporan Eksklusi Parameter & Perbaikan UI](#sesi-4)
-5. [Ringkasan File yang Dimodifikasi](#file-dimodifikasi)
-6. [Struktur ENV](#env)
-7. [Arsitektur Data Flow](#arsitektur)
+5. [Sesi 5 — Peningkatan Fleksibilitas Form & Manajemen Sensor](#sesi-5)
+6. [Sesi 6 — Sistem Tutorial Onboarding & Pemetaan ID Unik](#sesi-6)
+7. [Ringkasan Perubahan File](#file-dimodifikasi)
+8. [Struktur ENV](#env)
+9. [Arsitektur Data Flow](#arsitektur)
 
 ---
 
@@ -274,7 +276,7 @@ DB_USER=appuser
 DB_PASSWORD=appuser
 
 # Node-RED
-NEXT_PUBLIC_NODE_RED_URL=http://10.165.40.174:1880
+NEXT_PUBLIC_NODE_RED_URL=http://10.165.40.13:1880
 ```
 
 > **Konvensi Next.js:**
@@ -369,9 +371,44 @@ Mengubah algoritma *grouping key* untuk memadatkan data menggunakan presisi ting
 
 ### 4.4 — Perbaikan Visual Gradien Grafik Laporan
 **Masalah:**  
-Garis pada grafik (Line Chart) berubah menjadi merah terlalu awal meskipun nilai datanya belum menyentuh batas waspada/tindakan (threshold limit).
-**Solusi:**
-Sistem pewarnaan gradien grafik (SVG Linear Gradient) kini diperbaiki agar warna merah hanya muncul ketika nilai benar-benar melewati batas waspada/tindakan. Perhitungan gradien disesuaikan dengan selisih langsung terhadap `threshold` dan rentang data aktual (`maxVal` / `minVal`) sehingga indikator overlimit lebih akurat.
+Garis pada grafik (Line Chart) berubah menjadi merah terlalu awal meskipun nilai datanya belum menyentuh garis batas waspada/tindakan (threshold limit).
+**Solusi:**  
+Sistem pewarnaan gradien grafik (SVG Linear Gradient) yang awalnya dihitung berdasarkan skala batas absolut sumbu Y (`yMax` dan `yMin`) kini diperbaiki. Karena *library* grafik (Recharts) merender gradien berdasarkan dimensi objek (data aktual tertinggi dan terendah / `objectBoundingBox`), perhitungan warna gradien kini dihitung dinamis menggunakan selisih antara batas nilai *threshold* dengan `maxVal` dan `minVal` dari data riil.
+**File yang diubah:**
+- `components/reports/ReportChart.tsx`
+
+---
+
+## Sesi 5 — Peningkatan Fleksibilitas Form & Manajemen Sensor
+
+### 5.1 — Custom Durasi Pengecualian Fumigasi
+**Masalah:**  
+Sebelumnya, durasi maksimal untuk tipe anomali "Fumigasi" dikunci secara *hardcoded* maksimal 3 jam.
+**Solusi:**  
+Menghapus batas *hardcoded* tersebut dan menggantinya dengan input "Batas Maksimal Fumigasi (Jam)" yang muncul secara dinamis saat pengguna memilih tipe Fumigasi. Validasinya kini menggunakan *state* lokal yang diinput oleh pengguna.
+**File yang diubah:**
+- `components/data/ExclusionForm.tsx`
+
+---
+
+### 5.2 — Pemilihan Multi-Ruangan pada Form Pengecualian
+**Masalah:**  
+Pengguna hanya bisa memilih dan mengeksklusi satu ruangan pada satu waktu, sehingga merepotkan jika ada *maintenance* serentak.
+**Solusi:**  
+Mengganti elemen `<select>` tunggal dengan grid *checkbox* yang mendukung pemilihan lebih dari satu ruangan sekaligus. Logika *submit* diperbarui agar melakukan iterasi pada setiap ruangan terpilih dan mengirimkan permintaan penyimpanan secara berurutan.
+**File yang diubah:**
+- `components/data/ExclusionForm.tsx`
+
+---
+
+### 5.3 — Perluasan Properti Edit Sensor di Dashboard
+**Masalah:**  
+Fitur "Edit Sensor ID" di *Dashboard* utama (tombol gir) sebelumnya hanya mengizinkan pengubahan `external_log_id`.
+**Solusi:**  
+Menambahkan formulir untuk mengedit **Status (Aktif/Non-aktif)**, **Nama Ruangan**, dan **Line**. API backend juga disesuaikan untuk menerima dan menyimpan pengubahan *field-field* tersebut menggunakan instruksi `COALESCE`.
+**File yang diubah:**
+- `app/page.tsx`
+- `app/api/edit-room/route.ts`
 
 ### 5.4 — Peningkatan Responsivitas UI
 **Masalah:**  
@@ -386,21 +423,55 @@ Menerapkan kombinasi CSS Grid responsif (`sm:`, `md:`, `lg:`) pada semua form te
 
 ---
 
+---
+
+## Sesi 6 — Sistem Tutorial Onboarding & Pemetaan ID Unik
+
+### 6.1 — Penargetan CSS Class yang Rentan Patah
+**Masalah:**  
+Tutorial onboarding (`react-joyride`) di halaman Laporan, Dashboard, Email, dan Audit Trail sebelumnya menggunakan class-class CSS pembungkus (seperti `.grid-cols-1.md\\:grid-cols-4`, `.recharts-wrapper`, dsb). Hal ini membuat kaitan tutorial mudah mengalami malfungsi/error (tidak menemukan elemen DOM) ketika struktur tata letak (layout responsif) diubah.
+
+**Solusi:**  
+Menetapkan HTML ID unik (`id="..."`) yang spesifik pada kontainer elemen utama agar alur panduan Joyride tidak pernah luput.
+
+**Perubahan Target ID & Component:**
+- **Dashboard (`app/page.tsx`)**:
+  - `#dashboard-room-filter` (Filter pemilihan tipe ruangan)
+  - `#dashboard-kpi-summary` (Ringkasan kartu KPI)
+  - `#dashboard-realtime-grid` (Grid box live sensor)
+- **Data Management Form & List (`components/data/`)**:
+  - `#room-form` (Wrapper input properties)
+  - Parameter attribute ID (`id={attr.id}`) di `RoomForm.tsx` untuk input parameter spesifik detail ruangan.
+  - Memisahkan selektor status ke `#room-status` dan `#exclusion-status` untuk menghilangkan konflik tabrakan index selector.
+  - `#exclusion-list` pada `ExclusionList.tsx` untuk melacak tabel penampung list pengecualian aktif.
+- **Report Generator (`components/reports/ReportGenerator.tsx`)**:
+  - Pemisahan filter-filter tanggal & parameter dengan layout ID: `#report-room-filter`, `#report-start-date`, `#report-end-date`, `#report-interval-filter`, `#report-type-filter`, `#report-exclude-param`.
+  - `#report-pull-data-btn` (Tombol tarik data telemetry).
+  - `#report-summary-cards` (Cards ringkasan data).
+  - `#report-chart-preview` (Wrapper visual grafik).
+  - `#report-pdf-export` (Tombol unduh PDF).
+- **Email Alerts (`app/emails/page.tsx`)**:
+  - `#email-alarm-config` (Setting durasi anti-spam).
+  - `#email-add-form` (Tambah email baru).
+  - `#email-list-table` (Daftar list email).
+- **Audit Logs (`components/audit/AuditReportClient.tsx`)**:
+  - `#audit-filter-panel` (Panel kueri / filter log).
+  - `#audit-log-table` (Tabel log audit trail).
+
+---
+
 ## Ringkasan File yang Dimodifikasi
 
 | File | Jenis Perubahan |
 |---|---|
-| `app/page.tsx` | Ditulis ulang: hapus polling, filter-first + tombol fetch |
-| `app/data-management/page.tsx` | Ditulis ulang: hapus polling, filter-first + tombol fetch |
-| `app/api/add-exclusion/route.ts` | **Baru**: INSERT...SELECT dari Sensor ke Fumigasi dengan nilai sensor |
-| `app/api/report-readings/route.ts` | **Baru**: API fetch sensor dengan filter ruangan + tanggal |
-| `app/api/sensor-readings/route.ts` | Kembalikan ke LIMIT 2000 (untuk live view) |
-| `components/data/DataTable.tsx` | Tambah pagination 50 baris/halaman + isExcluded dengan trim() |
-| `components/data/ExclusionForm.tsx` | Pindah target API ke Next.js, hapus validasi client-side, pakai ENV |
-| `components/data/ExclusionList.tsx` | Grouping event Fumigasi, onDelete terima array IDs |
-| `components/reports/ReportGenerator.tsx` | Fetch manual, perbaikan trim(), import sonner, guard chart |
-| `lib/db.ts` | Gunakan process.env, tambah timeout & pool config |
-| `.env.local` | **Baru**: seluruh konfigurasi sensitif |
+| `app/page.tsx` | Menambahkan ID pembeda dasbor untuk selector tutorial. |
+| `app/emails/page.tsx` | Menambahkan ID `#email-alarm-config`, `#email-add-form`, dan `#email-list-table` untuk onboarding. |
+| `components/data/RoomForm.tsx` | Mengganti ID status menjadi `#room-status` & mendaftarkan unique input ID. |
+| `components/data/ExclusionForm.tsx` | Mengganti ID status menjadi `#exclusion-status`. |
+| `components/data/DataTable.tsx` | Menambahkan ID `#table-data` pada tabel data utama. |
+| `components/reports/ReportGenerator.tsx` | Menguraikan form filter ke selector `#report-*` untuk kaitan tutorial. |
+| `components/audit/AuditReportClient.tsx` | Menorehkan ID `#audit-filter-panel` & `#audit-log-table`. |
+| `components/TutorialComponent.tsx` | Memperbarui langkah-langkah joyride penargetan seluruh halaman berbasis ID baru secara modular. |
 
 ---
 
@@ -413,11 +484,15 @@ Menerapkan kombinasi CSS Grid responsif (`sm:`, `md:`, `lg:`) pada semua form te
 │  Dashboard / Data Management / Reports                       │
 │  → User isi filter (Ruangan + Tanggal)                       │
 │  → Klik "Tampilkan Data" / "Tarik Data"                      │
+│  └───────────────────────────────────────────────────────────┤
+│  Joyride Tutorial (TutorialComponent.tsx)                    │
+│  → Berjalan di balik layar menggunakan unique id selectors.  │
 └─────────────────────────┬────────────────────────────────────┘
                           │ HTTP Request (satu kali per klik)
 ┌─────────────────────────▼────────────────────────────────────┐
 │                    NEXT.JS API ROUTES                         │
 │                                                              │
+│  GET  /api/latest-reading    → Ambil data status terupdate   │
 │  GET  /api/sensor-readings   → LIMIT 2000 (live fallback)    │
 │  POST /api/report-readings   → Filter by date + unit_id      │
 │  GET  /api/get-exclusions    → Semua data BFS_EMS_Fumigasi   │
@@ -431,11 +506,11 @@ Menerapkan kombinasi CSS Grid responsif (`sm:`, `md:`, `lg:`) pada semua form te
 │  BFS_EMS_Fumigasi  → Data exclusion + copy nilai sensor      │
 └──────────────────────────────────────────────────────────────┘
 
-Node-RED (10.165.40.174:1880)
+Node-RED (10.165.40.13:1880)
 → Digunakan HANYA untuk: DELETE exclusion (Mustache SQL template)
 → TIDAK lagi digunakan untuk: INSERT (sudah pindah ke Next.js API)
 ```
 
 ---
 
-*Dokumentasi ini dibuat otomatis — terakhir diperbarui: 20 Mei 2026*
+*Dokumentasi ini dibuat otomatis — terakhir diperbarui: 10 Juli 2026*

@@ -379,9 +379,6 @@ filteredReadings[] ← allData difilter by selectedRoom
 **Cara kerja filter exclusion di chart:**
 Data dari sensor yang timestampnya jatuh di dalam rentang `timestamp_start` – `timestamp_end` di exclusion list akan ditandai sebagai `excluded` dan ditampilkan dengan warna berbeda di grafik.
 
-**Catatan terbaru:**
-- Grafik laporan kini menampilkan warna merah hanya untuk nilai yang benar-benar melewati batas waspada/tindakan. Nilai normal tetap menggunakan warna garis default agar indikator overlimit lebih jelas.
-
 ---
 
 ## 8. Cara Menjalankan Lokal
@@ -540,7 +537,8 @@ File `lib/db.ts` memuat konfigurasi ini menggunakan `process.env`. Pool database
 | Mei 2026 | **Stabilisasi Exclusion:** Fix tombol delete, hapus duplikasi ruangan (trim), migrasi INSERT Fumigasi ke Next.js API, highlight baris Excluded di tabel. |
 | Mei 2026 | **Performa & UI:** Fix data excluded di PDF (trim issue), simpan Temp/RH/DP ke Fumigasi (INSERT...SELECT), deduplikasi UI list Exclusion, pagination tabel 50 baris/halaman. |
 | Mei 2026 | **Keamanan & Fetch:** Sistem "Filter Dulu, Tampilkan Data" di semua halaman (hapus auto-fetch/polling), set DB connection timeout (5s), pindah kredensial ke `.env.local`. |
+| Juli 2026 | **Onboarding Tutorial & ID Mapping:** Integrasi panduan interaktif menggunakan Joyride di seluruh modul; menetapkan selector berbasis unique HTML ID untuk Dashboard, Data Management, Reports, Email Alerts, dan Audit Trail; menghilangkan bias selector CSS class. |
 
 ---
 
-*Dokumen ini dibuat secara otomatis berdasarkan kode aktual proyek EMS BFS.*
+*Dokumen ini dibuat secara otomatis berdasarkan kode aktual proyek EMS BFS. Terakhir diperbarui: 10 Juli 2026*
