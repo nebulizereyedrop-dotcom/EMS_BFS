@@ -399,7 +399,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div id="dashboard-room-filter" className="flex items-center gap-2">
           <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Filter:</span>
           <select
             value={filterType}
@@ -414,7 +414,7 @@ export default function Dashboard() {
       </div>
 
       {/* KPI SUMMARY CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div id="dashboard-kpi-summary" className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm flex flex-col justify-center">
           <div className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1 uppercase tracking-wider">{t("System Status")}</div>
           <div className="flex items-center gap-3">
@@ -447,7 +447,7 @@ export default function Dashboard() {
       </div>
 
       {/* REAL-TIME ROOMS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+      <div id="dashboard-realtime-grid" className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
         {displayedRooms.map((room) => {
           const data = realtimeData[room];
           const isConnected = !!data;

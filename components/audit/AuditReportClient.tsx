@@ -146,7 +146,7 @@ export default function AuditReportClient({ initialLogs }: { initialLogs: any[] 
       </div>
 
       {/* FILTER PANEL */}
-      <div className="p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
+      <div id="audit-filter-panel" className="p-6 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm">
         <h3 className="text-lg font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2 mb-6">
           <Filter className="w-5 h-5 text-blue-500" />
           {t("Filter & Pull Data")}
@@ -220,7 +220,7 @@ export default function AuditReportClient({ initialLogs }: { initialLogs: any[] 
       </div>
 
       {/* TABLE VIEW */}
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden bg-white dark:bg-zinc-900">
+      <div id="audit-log-table" className="border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden bg-white dark:bg-zinc-900">
         <div className="p-4 bg-zinc-50 dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
           <h2 className="font-semibold text-zinc-800 dark:text-zinc-100 flex items-center gap-2">
             <FileText className="w-4 h-4 text-zinc-500" />

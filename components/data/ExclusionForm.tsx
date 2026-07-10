@@ -227,7 +227,7 @@ export default function ExclusionForm({ onAddExclusion, readings = [] }: { onAdd
               placeholder={t("Reason Placeholder")}
             />
           </div>
-          <div id="status-exclusion">
+          <div id="exclusion-status">
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Target Data (Status)</label>
             <select
               value={statusTag}

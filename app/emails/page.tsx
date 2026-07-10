@@ -121,7 +121,7 @@ export default function EmailAlertsManager() {
         {/* Kolom Kiri: Form & Pengaturan */}
         <div className="lg:col-span-1 space-y-6">
           {/* Pengaturan Alarm */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+          <div id="email-alarm-config" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
               <AlertCircle className="w-5 h-5 text-amber-500" />
               Pengaturan Alarm
@@ -152,7 +152,7 @@ export default function EmailAlertsManager() {
           </div>
 
           {/* Form Tambah Email */}
-          <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+          <div id="email-add-form" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
               <Plus className="w-5 h-5 text-blue-500" />
               Tambah Email Baru
@@ -212,7 +212,7 @@ export default function EmailAlertsManager() {
 
         {/* Daftar Email */}
         <div className="lg:col-span-2">
-          <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+          <div id="email-list-table" className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
             <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
               <Mail className="w-5 h-5 text-emerald-500" />
               Daftar Penerima Alert ({emails.length})

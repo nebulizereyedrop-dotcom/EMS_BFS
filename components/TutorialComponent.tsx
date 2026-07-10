@@ -57,11 +57,16 @@ export default function TutorialComponent() {
             disableBeacon: true,
           },
           {
-            target: '.grid-cols-1.md\\:grid-cols-3',
+            target: '#dashboard-room-filter',
+            content: 'Gunakan filter ini untuk menyaring tampilan kartu ruangan berdasarkan kelompoknya.',
+            placement: 'bottom',
+          },
+          {
+            target: '#dashboard-kpi-summary',
             content: 'Bagian ini menampilkan ringkasan Status Sistem, unit aktif, dan peringatan (anomali) yang sedang terjadi.',
           },
           {
-            target: '.grid-cols-1.md\\:grid-cols-2.xl\\:grid-cols-3',
+            target: '#dashboard-realtime-grid',
             content: 'Di sini Anda dapat melihat data sensor (Suhu, Kelembapan, dan Tekanan) untuk setiap ruangan secara langsung.',
           },
           {
@@ -76,7 +81,7 @@ export default function TutorialComponent() {
             locale: { last: 'Lanjut ke Manajemen Data' }
           }
         ];
-         case '/data-management':
+      case '/data-management':
         return [
           {
             target: '#room-list-filter',
@@ -103,54 +108,56 @@ export default function TutorialComponent() {
             content: 'Setelah semua filter terisi, klik tombol ini untuk mengambil data',
             placement: 'right',
           },
-
           {
-            target: "room-form",
+            target: '#table-data',
+            content: 'Data hasil pencarian akan ditampilkan pada tabel ini',
+            placement: 'top',
+          },
+          {
+            target: "#room-form",
             content: 'Ini adalah form untuk menambahkan ruangan baru',
             placement: 'right',
           },
           {
-            target: "room-name",
+            target: "#room-name",
             content: 'Isi nama ruangan yang ingin ditambahkan',
             placement: 'right',
           },
           {
-            target: "temp",
+            target: "#temp",
             content: 'Isi data sensor untuk Temperature',
             placement: 'right',
           },
           {
-            target: "rh",
+            target: "#rh",
             content: 'Isi data sensor untuk Relative Humidity',
             placement: 'right',
           },
           {
-            target: "dp1",
+            target: "#dp1",
             content: 'Isi data sensor untuk Differential Pressure',
             placement: 'right',
           },
           {
-            target: "add-new-parameter",
+            target: "#add-new-parameter",
             content: 'Klik tombol ini untuk menambahkan parameter baru',
             placement: 'right',
           },
           {
-            target: "line",
+            target: "#line",
             content: 'Gunakan filter line untuk menentukan line yang ingin ditambahkan',
             placement: 'right',
           },
           {
-            target: "status",
+            target: "#room-status",
             content: 'Pilih status tag (Aktif / non-Aktif) untuk ruangan yang ingin ditambahkan',
             placement: 'right',
           },
           {
-            target: "submit",
+            target: "#submit",
             content: 'Klik tombol ini untuk mulai menambahkan data ruangan',
             placement: 'right',
           },
-
-
           {
             target: '#exclusion-form',
             content: 'Dan disini adalah form untuk mengecualikan data Fumigasi maupun PM',
@@ -177,7 +184,7 @@ export default function TutorialComponent() {
             placement: 'right',
           },
           {
-            target: "#status-exclusion",
+            target: "#exclusion-status",
             content: 'Pilih status tag pengecualian',
             placement: 'right',
           },
@@ -186,7 +193,11 @@ export default function TutorialComponent() {
             content: 'Klik tombol ini untuk mulai memindahkan data ke tabel pengecualian',
             placement: 'right',
           },
-
+          {
+            target: '#exclusion-list',
+            content: 'Daftar semua pengecualian data (seperti Fumigasi/PM) yang sedang aktif akan muncul di sini. Anda juga dapat menghapusnya jika terjadi kesalahan.',
+            placement: 'right',
+          },
           {
             target: '#ReportsMenu',
             content: 'Klik di sini untuk melanjutkan ke halaman Laporan.',
@@ -197,69 +208,59 @@ export default function TutorialComponent() {
       case '/reports':
         return [
           {
-            target: '#filter-controls',
-            content: 'Halaman Laporan. Gunakan filter ini untuk menentukan jenis laporan, periode waktu, dan parameter yang ingin ditampilkan.',
+            target: 'h1',
+            content: 'Halaman Laporan Sistem memungkinkan Anda menarik data riwayat dan mengunduhnya sebagai file PDF.',
             disableBeacon: true,
           },
           {
-            target: '#room-select',
-            content: 'Pilih ruangan yang ingin ditampilkan pada laporan.',
-            disableBeacon: true,
+            target: '#report-room-filter',
+            content: 'Pilih ruangan yang ingin Anda tampilkan laporannya',
+            placement: 'bottom',
           },
           {
-            target: '#start-date-picker',
-            content: 'Pilih tanggal & waktu mulai untuk laporan.',
-            disableBeacon: true
+            target: '#report-start-date',
+            content: 'Tentukan batas awal waktu data',
+            placement: 'bottom',
           },
           {
-            target: '#end-date-picker',
-            content: 'Pilih tanggal & waktu akhir untuk laporan.',  
-            disableBeacon: true
+            target: '#report-end-date',
+            content: 'Tentukan batas akhir waktu data',
+            placement: 'bottom',
           },
           {
-            target: '#data-interval-select',
-            content: 'Pilih interval data yang ingin ditampilkan pada laporan (1 Jam, 5 Menit, Mentah (All data)).',
-            disableBeacon: true,
+            target: '#report-interval-filter',
+            content: 'Pilih interval waktu pembacaan data',
+            placement: 'bottom',
           },
           {
-            target: '#report-type-select',
-            content: 'Pilih jenis laporan yang ingin dibuat (Fumigasi / Non-Fumigasi / All Data).',
-            disableBeacon: true,
+            target: '#report-type-filter',
+            content: 'Tentukan jenis status data yang akan dimasukkan dalam laporan',
+            placement: 'bottom',
           },
           {
-            target: '#exclude-parameter',
-            content: 'Centang parameter yang ingin dikecualikan dari laporan. (Temp / RH / Pressure).',
-            disableBeacon: true,
+            target: '#report-exclude-param',
+            content: 'Pilih parameter yang tidak ingin dimasukkan (dikecualikan)',
+            placement: 'top',
           },
           {
-            target: '#fetch-data-button',
-            content: 'Klik tombol ini untuk mengambil dan menampilkan data laporan berdasarkan filter yang telah dipilih.',
-            disableBeacon: true,
+            target: '#report-pull-data-btn',
+            content: 'Klik tombol ini untuk mulai memuat data dari server',
+            placement: 'right',
           },
           {
-            target: '#generate-pdf-button',
-            content: 'Klik tombol ini untuk mengunduh laporan dalam format PDF.',
-            disableBeacon: true,
+            target: '#report-summary-cards',
+            content: 'Total ringkasan data yang berhasil ditarik akan ditampilkan di sini',
+            placement: 'top',
           },
           {
-            target: '#filtered-records',
-            content: 'Menampilkan jumlah data yang telah difilter berdasarkan periode waktu dan ruangan yang dipilih.',
-            disableBeacon: true,
+            target: '#report-chart-preview',
+            content: 'Pratinjau visual berupa grafik data sensor akan muncul di area ini',
+            placement: 'top',
           },
           {
-            target: '#valid-data',
-            content: 'Menampilkan jumlah data yang valid dan termasuk dalam laporan.',
-            disableBeacon: true,
-          },
-          {
-            target: '#excluded-fumigasi',
-            content: 'Menampilkan jumlah data yang dikecualikan dari laporan.',
-            disableBeacon: true,
-          },
-          {
-            target: '#visual-preview',
-            content: 'Menampilkan pratinjau visual dari laporan yang akan diunduh dalam format PDF.',
-            disableBeacon: true,
+            target: '#report-pdf-export',
+            content: 'Jika data dan grafik sudah sesuai, klik Download untuk mengekspor ke PDF',
+            placement: 'left',
           },
           {
             target: '#EmailAlertsMenu',
@@ -276,8 +277,19 @@ export default function TutorialComponent() {
             disableBeacon: true,
           },
           {
-            target: 'table',
-            content: 'Anda dapat menambah atau menghapus penerima, serta mengatur filter pengiriman pada tabel ini.',
+            target: '#email-alarm-config',
+            content: 'Atur durasi interval pengiriman email peringatan agar tidak terjadi spam saat anomali terdeteksi.',
+            placement: 'right',
+          },
+          {
+            target: '#email-add-form',
+            content: 'Isi formulir ini untuk menambahkan email baru sebagai penerima notifikasi sistem.',
+            placement: 'right',
+          },
+          {
+            target: '#email-list-table',
+            content: 'Daftar semua email penerima alert akan ditampilkan di sini. Anda juga bisa menghapusnya dari daftar ini.',
+            placement: 'left',
           },
           {
             target: '#AuditLogMenu',
@@ -286,28 +298,28 @@ export default function TutorialComponent() {
             locale: { last: 'Lanjut ke Audit Trail' }
           }
         ];
-      // case '/audit-log':
-      //   return [
-      //     {
-      //       target: 'h1',
-      //       content: 'Halaman Audit Trail menyimpan rekam jejak setiap interaksi dan aktivitas pengguna dalam sistem.',
-      //       disableBeacon: true,
-      //     },
-      //     {
-      //       target: '.grid-cols-1.md\\:grid-cols-3, .grid-cols-1.sm\\:grid-cols-2',
-      //       content: 'Anda dapat melakukan filter data berdasarkan periode waktu, jenis aksi, atau modul yang diakses.',
-      //     },
-      //     {
-      //       target: 'table',
-      //       content: 'Seluruh riwayat aktivitas beserta detail user, alamat IP, dan waktu kejadian tersimpan pada tabel ini.',
-      //     },
-      //     {
-      //       target: '#tutorial-toggler',
-      //       content: 'Klik di sini untuk mengaktifkan / mengakhiri tutorial.',
-      //       placement: 'right',
-      //       locale: { last: 'Selesai' }
-      //     }
-      //   ];
+      case '/audit-log':
+        return [
+          {
+            target: 'h1',
+            content: 'Halaman Audit Trail menyimpan rekam jejak setiap interaksi dan aktivitas pengguna dalam sistem.',
+            disableBeacon: true,
+          },
+          {
+            target: '#audit-filter-panel',
+            content: 'Anda dapat melakukan filter data berdasarkan periode waktu, jenis aksi, atau modul yang diakses.',
+          },
+          {
+            target: '#audit-log-table',
+            content: 'Seluruh riwayat aktivitas beserta detail user, alamat IP, dan waktu kejadian tersimpan pada tabel ini.',
+          },
+          {
+            target: '#tutorial-toggler',
+            content: 'Klik di sini untuk mengaktifkan / mengakhiri tutorial.',
+            placement: 'right',
+            locale: { last: 'Selesai' }
+          }
+        ];
       default:
         return [
           {

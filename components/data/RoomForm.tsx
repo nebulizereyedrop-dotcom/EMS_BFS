@@ -171,7 +171,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
         {/* Attributes */}
         <div className="grid grid-cols-1 gap-4">
           {attributes.map((attr, index) => (
-            <div key={attr.id} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div id={attr.id} key={attr.id} className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
               <div className="flex items-center justify-between mb-3">
                 <span className="font-medium text-slate-700 dark:text-slate-200">{attr.name}</span>
                 {attr.deletable && (
@@ -247,7 +247,7 @@ export default function RoomForm({ onAddRoom }: { onAddRoom?: (data: any) => voi
               ))}
             </select>
           </div>
-          <div id='status'>
+          <div id='room-status'>
             <label className="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{t("Status")}</label>
             <select
               value={status}
